@@ -51,7 +51,7 @@ function updateTable(){
 
         totalPrice = (companies[i].price * companies[i].amount).toFixed(2);
 
-        tableData += `<tr>
+        tableData += `<tr id ="${i}">
         <td>${companies[i].name}</td>
         <td>$${companies[i].price}</td>
         <td>${companies[i].amount}</td>
