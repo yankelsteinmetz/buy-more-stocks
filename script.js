@@ -41,9 +41,9 @@ const companies =[
     }
 ]
 
-updateTable();
+createTable();
 
-function updateTable(){
+function createTable(){
 
     let tableData = "";
     
@@ -56,10 +56,25 @@ function updateTable(){
         <td>$${companies[i].price}</td>
         <td>${companies[i].amount}</td>
         <td>$${totalPrice}</td>
-        <td><button onclick = "buyMore(${i})">buy more</button></td>`;
+        <td><button class = "add" onclick = "buyMore(${i})">buy more</button></td>
+        <td><button class ="remove" onclick = "removeRecord(${i})">remove</button></td>
+        </tr>`;
 
         document.getElementById("table-data").innerHTML = tableData;
     }
+}
+
+function updateRecord(index){
+    
+    totalPrice = (companies[index].price * companies[index].amount).toFixed(2);
+
+    document.getElementById(index).innerHTML = 
+    `   <td>${companies[index].name}</td>
+        <td>$${companies[index].price}</td>
+        <td>${companies[index].amount}</td>
+        <td>$${totalPrice}</td>
+        <td><button class = "add" onclick = "buyMore(${index})">buy more</button></td>
+        <td><button class = "remove" onclick = "removeRecord(${index})">remove</button></td>`;
 }
 
 function buyMore(index){
@@ -75,6 +90,13 @@ function buyMore(index){
 
     companies[index].amount  += amountToBuy;
     
-    updateTable();
+    updateRecord(index);
     }
+}
+
+function removeRecord(index){
+
+    let elementToRemove = document.getElementById(index);
+    console.log(elementToRemove);
+    elementToRemove.remove();
 }

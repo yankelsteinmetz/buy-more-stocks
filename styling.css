@@ -50,14 +50,25 @@ tr:hover{
 tr:hover td:nth-child(1){
     font-size: 27px;
 }
-button{
+button.add{
     height: 50px;
     width: 170px;
     border-color: green;
     border-radius: 25px;
     color: green;
 }
-button:hover{
-    background-color: rgb(143, 224, 143);
+button.add:hover{
+    background-color:rgb(143, 224, 143);
+    
+}
+button.remove{
+    height: 50px;
+    width: 170px;
+    border-color: red;
+    border-radius: 25px;
+    color: red;
+}
+button.remove:hover{
+    background-color: rgb(230, 157, 157);
     
 }
