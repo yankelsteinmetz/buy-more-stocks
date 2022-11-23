@@ -10,6 +10,9 @@ body{
     position: fixed;
     right: 60px;
 }
+#market-status-div{
+    text-align: center;
+}
 h1{
     font-family: "times new roman";
     font-size: 50px;
