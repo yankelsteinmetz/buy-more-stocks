@@ -40,6 +40,7 @@ const companies =[
         amount: 6
     }
 ]
+let isMarketOpen = false;
 
 createTable();
 
@@ -79,6 +80,8 @@ function updateRecord(index){
 
 function buyMore(index){
 
+    if (!isMarketOpen) return;
+
     amountToBuy = prompt(`how many stocks of ${companies[index].name} do you want to buy?`);
 
     amountToBuy = Number(amountToBuy);
@@ -96,7 +99,39 @@ function buyMore(index){
 
 function removeRecord(index){
 
+    if (!isMarketOpen) return;
+
     let elementToRemove = document.getElementById(index);
     console.log(elementToRemove);
     elementToRemove.remove();
+}
+
+function getDateTime(){
+
+    const weekdays =["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+    const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+    let now = new Date();
+    let dayOfWeek = weekdays[now.getDay()];
+    let day = now.getDate();
+    let month = months[now.getMonth()];
+    let time = now.getHours()+':'+now.getMinutes()+':'+now.getSeconds() ;
+
+    document.getElementById("current-date-time").innerHTML =
+    `${dayOfWeek}, ${month} ${day}\t\n
+     ${time}`
+}
+
+setInterval(getDateTime, 1000);
+setInterval(openAndClosedMarket, 1000);
+
+function openAndClosedMarket(){
+
+    if (!isMarketOpen){
+
+        document.getElementsByTagName('link')[0].setAttribute('href',"./styling-dark.css")
+
+        document.getElementById("market-status").innerHTML = "closed";
+    }
 }
