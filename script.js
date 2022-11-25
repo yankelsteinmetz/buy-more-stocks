@@ -128,13 +128,13 @@ function getDateTime(){
         hrs = 12;
     } else if (hrs >= 12) {
         hrs = hrs - 12;
-        period = "PM";
+        amPm = "PM";
     }
 
     mins = mins < 10 ? "0" + mins : mins;
     secs = secs < 10 ? "0" + secs : secs;
       
-    let time = `${hrs}:${mins}:${secs}:${amPm}`;
+    let time = `${hrs}:${mins}:${secs} ${amPm}`;
       
     document.getElementById("current-date-time").innerHTML =
     `${dayOfWeek}, ${month} ${day}\t\n
@@ -142,7 +142,16 @@ function getDateTime(){
 
     // check if the market is open or closed
 
-     if ((hrs < 9 && mins <30) || hrs >= 4 || dayOfWeek == "Sunday" || dayOfWeek == "Saturday"){
+     if ((hrs >= 9 && mins >= 30) && hrs < 16 && dayOfWeek != "Sunday" && dayOfWeek != "Saturday"){
+       
+        isMarketOpen = true;
+
+        document.getElementsByTagName('link')[0].setAttribute('href',"./styling.css");
+
+        document.getElementById("market-status").innerHTML = "open";
+
+
+     } else {
 
         isMarketOpen = false;
 
@@ -150,24 +159,18 @@ function getDateTime(){
 
         document.getElementById("market-status").innerHTML = "closed";
 
-     } else {
-
-        isMarketOpen = true;
-
-        document.getElementsByTagName('link')[0].setAttribute('href',"./styling.css");
-
-        document.getElementById("market-status").innerHTML = "open";
-
      }
-
+  
      //make a count down
-     if (hrs < 9 && mins <30){
+
+     if (!(hrs >= 9 && mins >= 30)){
 
         let opening = new Date(year,now.getMonth(),day,9,30);
 
-        let countDown = opening - now;
+        let countDown = new Date(opening - now) ;
+        console.log(`countdown is ${countDown}`);
 
-     } else if (hrs >= 4){
+     } else if (hrs >= 16){
 
         let closed = new Date(year,now.getMonth(),day,16,0);
 
@@ -179,7 +182,9 @@ function getDateTime(){
 
         let opened = new Date(year,now.getMonth(),day,9,30);
 
-        let countDown = now - opened ;
+        let countDown = new Date(now - opened) ;
+
+        console.log(`countdown is ${countDown}`);
      }
 
 }
