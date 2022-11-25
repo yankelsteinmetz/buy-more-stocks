@@ -40,7 +40,7 @@ const companies =[
         amount: 6
     }
 ]
-let isMarketOpen = false;
+let isMarketOpen = true;
 
 createTable();
 
@@ -112,26 +112,78 @@ function getDateTime(){
 
     const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
+    // get the date and time
+
     let now = new Date();
+    let year = now.getFullYear();
     let dayOfWeek = weekdays[now.getDay()];
     let day = now.getDate();
     let month = months[now.getMonth()];
-    let time = now.getHours()+':'+now.getMinutes()+':'+now.getSeconds() ;
+    let hrs = now.getHours();
+    let amPm =  "AM";
+    let mins = now.getMinutes();
+    let secs = now.getSeconds();
 
+    if (hrs == 0) {
+        hrs = 12;
+    } else if (hrs >= 12) {
+        hrs = hrs - 12;
+        period = "PM";
+    }
+
+    mins = mins < 10 ? "0" + mins : mins;
+    secs = secs < 10 ? "0" + secs : secs;
+      
+    let time = `${hrs}:${mins}:${secs}:${amPm}`;
+      
     document.getElementById("current-date-time").innerHTML =
     `${dayOfWeek}, ${month} ${day}\t\n
      ${time}`
+
+    // check if the market is open or closed
+
+     if ((hrs < 9 && mins <30) || hrs >= 4 || dayOfWeek == "Sunday" || dayOfWeek == "Saturday"){
+
+        isMarketOpen = false;
+
+        document.getElementsByTagName('link')[0].setAttribute('href',"./styling-dark.css");
+
+        document.getElementById("market-status").innerHTML = "closed";
+
+     } else {
+
+        isMarketOpen = true;
+
+        document.getElementsByTagName('link')[0].setAttribute('href',"./styling.css");
+
+        document.getElementById("market-status").innerHTML = "open";
+
+     }
+
+     //make a count down
+     if (hrs < 9 && mins <30){
+
+        let opening = new Date(year,now.getMonth(),day,9,30);
+
+        let countDown = opening - now;
+
+     } else if (hrs >= 4){
+
+        let closed = new Date(year,now.getMonth(),day,16,0);
+
+        let countDown = new Date(now - closed) ;
+
+        console.log(`countdown is ${countDown}`);
+
+     } else {
+
+        let opened = new Date(year,now.getMonth(),day,9,30);
+
+        let countDown = now - opened ;
+     }
+
 }
 
 setInterval(getDateTime, 1000);
-setInterval(openAndClosedMarket, 1000);
 
-function openAndClosedMarket(){
 
-    if (!isMarketOpen){
-
-        document.getElementsByTagName('link')[0].setAttribute('href',"./styling-dark.css")
-
-        document.getElementById("market-status").innerHTML = "closed";
-    }
-}
