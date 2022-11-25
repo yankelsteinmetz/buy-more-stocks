@@ -119,16 +119,19 @@ function getDateTime(){
     let dayOfWeek = weekdays[now.getDay()];
     let day = now.getDate();
     let month = months[now.getMonth()];
-    let hrs = now.getHours();
+    let hrs24 = now.getHours();
     let amPm =  "AM";
     let mins = now.getMinutes();
     let secs = now.getSeconds();
+    let hrs;
 
-    if (hrs == 0) {
+    if (hrs24 == 0) {
         hrs = 12;
-    } else if (hrs >= 12) {
-        hrs = hrs - 12;
+    } else if (hrs24 > 12) {
+        hrs = hrs24 - 12;
         amPm = "PM";
+    } else {
+        hrs = hrs24
     }
 
     mins = mins < 10 ? "0" + mins : mins;
@@ -142,7 +145,7 @@ function getDateTime(){
 
     // check if the market is open or closed
 
-     if ((hrs >= 9 && mins >= 30) && hrs < 16 && dayOfWeek != "Sunday" && dayOfWeek != "Saturday"){
+     if ((hrs24 > 9 || (hrs24 == 9 && mins >= 30)) && hrs24 < 16 && dayOfWeek != "Sunday" && dayOfWeek != "Saturday"){
        
         isMarketOpen = true;
 
@@ -161,31 +164,68 @@ function getDateTime(){
 
      }
   
+
      //make a count down
 
-     if (!(hrs >= 9 && mins >= 30)){
+     let message;
+     let countDown;
+
+     if (dayOfWeek == "Saturday"){
+
+        let opening = new Date(year,now.getMonth(),day + 2 ,9,30);
+
+        message = "the market will open in";
+
+        countDown = new Date(opening - now) ;
+
+
+     } else if (dayOfWeek == "Sunday"){
+
+        let opening = new Date(year,now.getMonth(),day + 1 ,9,30);
+
+        message = "the market will open in";
+
+        countDown = new Date(opening - now) ;
+
+
+     } else if (!(hrs24 > 9 || (hrs24 == 9 && mins >= 30))){
 
         let opening = new Date(year,now.getMonth(),day,9,30);
 
-        let countDown = new Date(opening - now) ;
-        console.log(`countdown is ${countDown}`);
+        message = "the market will open in";
 
-     } else if (hrs >= 16){
+        countDown = new Date(opening - now) ;
+
+
+     } else if (hrs24 >= 16){
 
         let closed = new Date(year,now.getMonth(),day,16,0);
 
-        let countDown = new Date(now - closed) ;
+        message = "the market is closed already for";
 
-        console.log(`countdown is ${countDown}`);
+        countDown = new Date(now - closed) ;
+
 
      } else {
 
         let opened = new Date(year,now.getMonth(),day,9,30);
 
-        let countDown = new Date(now - opened) ;
+        message = "the market already open for";
 
-        console.log(`countdown is ${countDown}`);
+        countDown = new Date(now - opened) ;
+
      }
+    
+     //add 5 days to get the correct time in UTC
+     countDown = new Date(countDown.getTime() + 18000000);
+
+     let daysLeft = countDown.getDate() -1;
+     let hrsLeft = countDown.getHours();
+     let minsLeft = countDown.getMinutes();
+     let secsLeft = countDown.getSeconds();
+
+     let timeLeft = `${daysLeft} days ${hrsLeft} hours ${minsLeft} minutes ${secsLeft} seconds`
+     document.getElementById("count-down").innerHTML = timeLeft;
 
 }
 
