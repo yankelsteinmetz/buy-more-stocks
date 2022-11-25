@@ -129,9 +129,12 @@ function getDateTime(){
         hrs = 12;
     } else if (hrs24 > 12) {
         hrs = hrs24 - 12;
-        amPm = "PM";
     } else {
         hrs = hrs24
+    }
+
+    if (hrs24 >= 12){
+        amPm = "PM";
     }
 
     mins = mins < 10 ? "0" + mins : mins;
