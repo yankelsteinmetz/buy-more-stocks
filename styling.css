@@ -6,7 +6,7 @@ body{
     position: fixed;
     left: 60px;
 }
-#count-down{
+#counting{
     position: fixed;
     right: 60px;
 }

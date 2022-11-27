@@ -2,11 +2,17 @@ body{
     background-color: rgb(31, 70, 31);
     padding: 20px;
 }
+.header{
+    color:#d2ff9e;
+}
 #current-date-time{
     position: fixed;
     left: 60px;
 }
-#count-down{
+#market-status-div{
+    text-align: center;
+}
+#counting{
     position: fixed;
     right: 60px;
 }

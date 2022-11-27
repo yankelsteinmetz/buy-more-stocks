@@ -142,9 +142,11 @@ function getDateTime(){
       
     let time = `${hrs}:${mins}:${secs} ${amPm}`;
       
-    document.getElementById("current-date-time").innerHTML =
-    `${dayOfWeek}, ${month} ${day}\t\n
-     ${time}`
+    document.getElementById("current-date").innerHTML =
+    `${dayOfWeek}, ${month} ${day}`;
+
+     document.getElementById("current-time").innerHTML =
+     `${time}`;
 
     // check if the market is open or closed
 
@@ -170,14 +172,13 @@ function getDateTime(){
 
      //make a count down
 
-     let message;
+     let message = 'the market will open in';
      let countDown;
 
      if (dayOfWeek == "Saturday"){
 
         let opening = new Date(year,now.getMonth(),day + 2 ,9,30);
 
-        message = "the market will open in";
 
         countDown = new Date(opening - now) ;
 
@@ -186,16 +187,12 @@ function getDateTime(){
 
         let opening = new Date(year,now.getMonth(),day + 1 ,9,30);
 
-        message = "the market will open in";
-
         countDown = new Date(opening - now) ;
 
 
      } else if (!(hrs24 > 9 || (hrs24 == 9 && mins >= 30))){
 
         let opening = new Date(year,now.getMonth(),day,9,30);
-
-        message = "the market will open in";
 
         countDown = new Date(opening - now) ;
 
@@ -219,8 +216,8 @@ function getDateTime(){
 
      }
     
-     //add 5 days to get the correct time in UTC
-     countDown = new Date(countDown.getTime() + 18000000);
+     //get the time in UTC
+     countDown = new Date(countDown.toUTCString().slice(0, -4));
 
      let daysLeft = countDown.getDate() -1;
      let hrsLeft = countDown.getHours();
@@ -228,6 +225,8 @@ function getDateTime(){
      let secsLeft = countDown.getSeconds();
 
      let timeLeft = `${daysLeft} days ${hrsLeft} hours ${minsLeft} minutes ${secsLeft} seconds`
+
+     document.getElementById("message").innerHTML = message;
      document.getElementById("count-down").innerHTML = timeLeft;
 
 }
