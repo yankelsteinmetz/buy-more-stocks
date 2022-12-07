@@ -2,59 +2,73 @@ const companies =[
     {
         name: "JP Morgan Chase",
         price: 117.20,
-        amount: 4
+        amount: 4,
+        Ticker:"JPM"
     },
     {
         name:"Deutsche Bank",
         price: 8.66,
-        amount: 3
+        amount: 3,
+        Ticker:"DB"
     },
     {
         name: "Fidelity",
         price: 36.78,
-        amount: 10
+        amount: 10,
+        Ticker: "FNF"
     },
     {
         name: "Citi Bank",
         price: 43.38,
-        amount: 7
+        amount: 7,
+        Ticker:"C"
     },
     {
         name: "MasterCard",
         price: 297.77,
-        amount: 1
-    },
+        amount: 1,
+        Ticker:"MA"
+    }/*,
     {
         name: "Goldman Sachs",
         price: 311.65,
-        amount: 2
+        amount: 2,
+        Ticker:"GS"
     },
     {
         name: "Bank of America",
         price: 43.30,
-        amount: 8
+        amount: 8,
+        Ticker:"BAC"
     },
     {
         name: "American Express",
         price: 134.70,
-        amount: 6
-    }
+        amount: 6,
+        Ticker:"AXP"
+    }*/
 ]
 let isMarketOpen = true;
 
 createTable();
 
-function createTable(){
+async function createTable(){
 
     let tableData = "";
-    
+    let price;
+
     for (let i = 0; i < companies.length; i++){
 
-        totalPrice = (companies[i].price * companies[i].amount).toFixed(2);
+        const promise = new Promise(()=> { price = GetStockPrice(companies[i].Ticker)})
+        promise.then( () => {console.log(price); putItTable()})
+        
+
+        function putItTable(){
+        let totalPrice = price * companies[i].amount.toFixed(2);
 
         tableData += `<tr id ="${i}">
         <td>${companies[i].name}</td>
-        <td>$${companies[i].price}</td>
+        <td>$${price}</td>
         <td>${companies[i].amount}</td>
         <td>$${totalPrice}</td>
         <td><button class = "add" onclick = "buyMore(${i})">buy more</button></td>
@@ -62,6 +76,8 @@ function createTable(){
         </tr>`;
 
         document.getElementById("table-data").innerHTML = tableData;
+        }
+        
     }
 }
 
@@ -71,7 +87,7 @@ function updateRecord(index){
 
     document.getElementById(index).innerHTML = 
     `   <td>${companies[index].name}</td>
-        <td>$${companies[index].price}</td>
+        <td>$${GetStockPrice(companies[i].Ticker)}</td>
         <td>${companies[index].amount}</td>
         <td>$${totalPrice}</td>
         <td><button class = "add" onclick = "buyMore(${index})">buy more</button></td>
@@ -104,6 +120,21 @@ function removeRecord(index){
     let elementToRemove = document.getElementById(index);
     console.log(elementToRemove);
     elementToRemove.remove();
+}
+
+function GetStockPrice(ticker){
+
+    let request = "https://api.polygon.io/v2/aggs/ticker/"+ticker+"/prev?adjusted=true&apiKey=tfJTpdrgYQhK18JL_yNprEOr5yrW4MUz";
+    fetch(request)
+    .then((response) => response.json())
+    .then((data) => {
+        let myResults = data.results[0].c;
+        console.log(myResults);
+        return myResults;})
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+
 }
 
 function getDateTime(){
