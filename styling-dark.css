@@ -16,6 +16,9 @@ body{
     position: fixed;
     right: 60px;
 }
+#message{
+    text-align: right;
+}
 h1{
     font-family: "times new roman";
     font-size: 50px;

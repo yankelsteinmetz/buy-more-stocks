@@ -10,6 +10,9 @@ body{
     position: fixed;
     right: 60px;
 }
+#message{
+    text-align: right;
+}
 #market-status-div{
     text-align: center;
 }
