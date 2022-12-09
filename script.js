@@ -48,25 +48,37 @@ const companies =[
         Ticker:"AXP"
     }*/
 ]
+
 let isMarketOpen = true;
 
 createTable();
 
 async function createTable(){
-
-    let tableData = "";
-    let price;
-
+    
     for (let i = 0; i < companies.length; i++){
 
-        const promise = new Promise(()=> { price = GetStockPrice(companies[i].Ticker)})
-        promise.then( () => {console.log(price); putItTable()})
-        
+        let request = `https://api.polygon.io/v2/aggs/ticker/${companies[i].Ticker}/prev?adjusted=true&apiKey=tfJTpdrgYQhK18JL_yNprEOr5yrW4MUz`;
+        fetch(request)
+        .then((response) => response.json())
+        .then((data) => {
+            let price = data.results[0].c;
+            companies[i].price = price;
+    
+            document.getElementById("table-data").innerHTML += createHtml(i,price);
 
-        function putItTable(){
+            console.log(`the price of ${companies[i].name} is ${price}`);
+            })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+}
+}
+        
+function createHtml(i, price){
+            
         let totalPrice = price * companies[i].amount.toFixed(2);
 
-        tableData += `<tr id ="${i}">
+        let htmlTable = `<tr id ="${i}">
         <td>${companies[i].name}</td>
         <td>$${price}</td>
         <td>${companies[i].amount}</td>
@@ -75,11 +87,10 @@ async function createTable(){
         <td><button class ="remove" onclick = "removeRecord(${i})">remove</button></td>
         </tr>`;
 
-        document.getElementById("table-data").innerHTML = tableData;
+        return htmlTable;
         }
         
-    }
-}
+    
 
 function updateRecord(index){
     
@@ -87,7 +98,7 @@ function updateRecord(index){
 
     document.getElementById(index).innerHTML = 
     `   <td>${companies[index].name}</td>
-        <td>$${GetStockPrice(companies[i].Ticker)}</td>
+        <td>$${companies[index].price}</td>
         <td>${companies[index].amount}</td>
         <td>$${totalPrice}</td>
         <td><button class = "add" onclick = "buyMore(${index})">buy more</button></td>
@@ -122,20 +133,6 @@ function removeRecord(index){
     elementToRemove.remove();
 }
 
-function GetStockPrice(ticker){
-
-    let request = "https://api.polygon.io/v2/aggs/ticker/"+ticker+"/prev?adjusted=true&apiKey=tfJTpdrgYQhK18JL_yNprEOr5yrW4MUz";
-    fetch(request)
-    .then((response) => response.json())
-    .then((data) => {
-        let myResults = data.results[0].c;
-        console.log(myResults);
-        return myResults;})
-    .catch((error) => {
-      console.error('Error:', error);
-    });
-
-}
 
 function getDateTime(){
 
