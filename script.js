@@ -76,7 +76,7 @@ async function createTable(){
         
 function createHtml(i, price){
             
-        let totalPrice = price * companies[i].amount.toFixed(2);
+        let totalPrice = (price * companies[i].amount).toFixed(2);
 
         let htmlTable = `<tr id ="${i}">
         <td>${companies[i].name}</td>
